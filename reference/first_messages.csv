@@ -1,0 +1,61 @@
+n,first_name,first_message,word_count,char_count
+1,Al,"hey Al, saw Levee’s been getting a lot of love in hospitality tech lately, congrats! seems like a fun stretch to be building through.  curious, how’s the build going?",29,166
+2,Andrew,"hey Andrew, congrats on the Branchmore beta launch!  curious, are you still in early user feedback mode, or already thinking about how to grow from here?",26,153
+3,Anthony,"hey Anthony, saw your post about telling clients early when something is bigger than an MVP, that part about clarity being kindness later stuck with me.  curious, how's the build going with NBLK?",33,195
+4,Aryaman,"hey Aryaman, cookies to YC is a crazy transition!  curious, has Mercury crossed your radar at all as you've been building?",21,122
+5,Ayomide,"ey Ayomide, hardware tooling finally catching up to software feels like a big unlock - curious, how’s the build going?",20,118
+6,Barton,"hey Barton, congrats on the Wishboard launch! such an interesting concept.  curious, how’s the build going?",16,107
+7,Brian,"hey Brian, saw your breakdown on cover letters. the “which applications deserve one” framing feels way more useful than the usual career advice.  curious, how’s the build going with JobIntel?",30,191
+8,Christopher,"hey Christopher, models being powerful enough already and control being the actual gap is a good point.   how's the build going with VizCo?",23,139
+9,Contessa,"hey Contessa, congrats on over a year co-founding CleanClaim AI!  curious, are you working with your first customers yet, or still in the build phase?",25,150
+10,David,"hey David, saw iQs just came out of stealth, exciting point to be at after building quietly for a while!  curious, how’s the build goin",25,135
+11,Deepak,"hey Deepak, the ""leaky bucket"" framing for DevRel spend, spike then 90% gone by day 30, is a good way to put it!  curious, how's the build going with HiDevs?",30,157
+12,Dinakara,"hey Dinakara, the idea that these apps forget you between sessions is exactly why people bounce is such a good catch.   curious, how's the build going with Menthra?",28,164
+13,Fabia,"hey Fabia, doing with 30 people what competitors needed 120 for is crazy. makes sense that's what got you building Reintersect.   curious, how's the build going?",26,161
+14,Fro,"hey Fro, “healthcare needs its SpaceX” is a pretty strong way to frame what Stack is taking on!  curious, how’s the build going so far?",25,135
+15,Henry,"hey Henry, the way you frame recruiting feels very intentional. asmbld seems built by someone who has actually lived the mess on the hiring side.  curious, how's the build going?",30,178
+16,Jackson,"hey Jackson, the local-first angle with Scout/Courier is pretty refreshing, especially with everyone else defaulting to cloud + token spend.  curious, how's the build going with RecursionAI?",27,190
+17,Jason,"hey Jason, I think you're right that confidence is the new bottleneck, but the part that seems hardest is that confidence itself becomes non-deterministic once the thing generating the evidence is the same kind of system you're trying to evaluate. feels almost circular.   curious, how's the build going with [Jank.AI](http://jank.ai/)?",50,336
+18,Jeremiah,"Hey Jeremiah, saw you’re building Mojave Labs now after a pretty deep run across AI product and MLOps!  curious, how’s the build going?",23,135
+19,Jesse,"Jesse, the turning every breakdown into a named guardrail point stuck with me.   curious, how’s the build going?",18,112
+20,Jim,"hey Jim, liked your point that the model isn’t really the bottleneck anymore, deployment is.  curious, how’s the build going with Aimersion as teams move from AI experiments into actual production workflows?",32,207
+21,Joe,"hey Joe, saw your background spans games, VR, UX, and studio-building! pretty cool mix of creative and technical work.  curious, how’s the build going?",24,151
+22,Johanna,"Hey Johanna, saw you’re building cane out of The Residency in SF this summer - feels like a really interesting space to build in.   Curious, how’s the build going?",29,163
+23,Johnny,"ey Johnny, the “brains, not chatbots” framing is sharp, makes Fabric feel a lot more personal.  curious, how's the build going?",21,127
+24,Jon,"hey Jon, after 27 years as a PMM, building the tool you wished existed is so exciting.  curious how’s the build going with SupraPrompt?",24,135
+25,Joshua,"Hey Joshua, congrats on WissenWelle's learning ecosystem being live with founders signing up!  Curious, is the focus right now more on growing paid members or building out the business side?",30,190
+26,Julia,"hey Julia, your Goldilocks take on digital transformation was a great read - not robo-everything, not old-oak-desk everything, just what clients and advisors actually need.   curious, how’s the new chapter going?",31,212
+27,Kalpana,"hey Kalpana, congrats on HBS Foundry for Nestaid!  home care ops seems like one of those spaces where small misses turn into real problems fast. how's the build going?",29,167
+28,Kamil,"hey Kamil, saw your line that hardware humbles you weekly, feels very real for what you’re building with REVEL.  curious, how’s the build going?",24,144
+29,Katrine,"hey Katrine, saw your post about people using AI like a search engine - honestly so true. seems like most people try the tools but never really make them part of their workflow.   curious, how’s the build with Neonframe going?",40,226
+30,Kostas,"hey Kostas, watching anime to study the culture as step 4 of a market entry plan is a really good call lol.  curious, how's the build going with Uplodio?",29,153
+31,Laura,"hey Laura! saw that AVA is going live in July with early waitlist access - that's big!  curious, how's the build going?",22,119
+32,Marouane,"hey Marouane, saw your point that the hard part isn’t exporting a file, it’s making a whole video library understandable. feels like Firassa is going after the part editors actually lose time on.  curious, how’s the build going?",38,228
+33,Mateo,"hey Mateo, MIT thesis to startup is a pretty cool path - curious, how’s the build going?",17,88
+34,Mekhal,"hey Mekhal, nights-and-weekends founder mode is real, saw Finide’s been most of your focus lately.  curious, how the build’s going?",20,131
+35,Michael,"hey Michael, smart to skip the app for crews and just use text, most of them probably wouldn't touch a dashboard anyway.   curious, how's the build going with CleanSlate AI?",30,173
+36,Nabeel,"hey Nabeel, your CNBC post was a good read. “do the job before you have the title” feels very founder-coded.  curious, how’s the build going with SkillAxis?",27,156
+37,Ollie,"hey Ollie, the point about companies paying twice, once to get a lead and again to replace the one they never followed up on, is a brutal but accurate way to describe the treadmill.   curious, how's the build going with [RevOps.ai](http://revops.ai/)?",41,251
+38,Paridhi,"hey Paridhi, really liked the iMessage angle for Illume - the integration felt way more natural than asking people to manage yet another health dashboard.   curious, how’s the build going?",30,188
+39,Prajit,"hey Prajit, your FireGNN/X-Node post was a great read, esp the jump from explainable GNN research to now building a planetary-scale simulation engine.   curious, are you mostly still in research/build mode right now, or starting to think through the company side too?",42,267
+40,Prasaath,"hey Prasaath, saw Shidosha is live and you’re already hiring in India too.   curious, how’s it been going since launch?",20,119
+41,Prasad,"hey Prasad, the 1x a week rule where you solve something yourself instead of letting an agent one shot, cool way to keep the muscle alive.   curious, how's the build going?",31,172
+42,Rahul,"hey Rahul, [Aureak.ai](http://aureak.ai/) is basically doing the neocloud vs hyperscaler math that most term sheets gloss over, much needed.   curious, how's the build going?",24,174
+43,Raman,"hey Raman, saw you’re taking on data center supply chain now - not the flashiest problem, but probably one of the more important ones.  curious, how’s the build going?",29,167
+44,Riddhiman,"hey Riddhiman, the analogy of LLMs being like a med grad who's read every textbook but never practiced is clean.   curious, how's the build going with Vitruvia?",27,160
+45,Sagar,"hey Sagar, SnackableAI being a price comparison layer for Uber Eats and DoorDash is a very real consumer pain point, those fees add up fast!  curious, how’s the build going?",30,173
+46,Sam,"hey Sam, enterprise readiness being more than the tech is exactly right. that’s usually the part people underestimate.   curious how the build’s going with Dapient?",25,164
+47,Saumya,"hey Saumya, congrats on launching Arogya’s site!  moving biomaterials from the lab toward trauma/surgery use cases seems like a huge jump. curious, how's the build going?",26,170
+48,Sofi,"hey Sofi, “whom I build it for, and why” is a refreshing way to frame all the hackathon/AI momentum.   curious, how’s the build going?",24,134
+49,Sohazur,"hey Sohazur, outpacing all of 2025 in 4 months is a crazy stat honestly.   curious, how's the build going with ReachLLM?",21,120
+50,Vamsi,"hey Vamsi, your “profit ≠ cash” post was a good read. feels especially true for the manufacturing/NBFC world you’re building in.  curious, how's the build going with Finoscale?",28,176
+51,Vinod,"hey Vinod! 4x efficiency at 50% lower cost is a pretty serious result.   curious, how the build is going now that you’ve got RIE out in the world?",28,146
+52,Will,"hey Will, saw your post about only ever feeling a few steps ahead in AI - that's the most real way to describe building in this space right now.  curious, how’s the build going?",34,177
+53,Yaron,"hey Yaron, hosted bonding instead of another VPN or a box people self-deploy is the real gap in that market.   curious, how's the build going with MCR Box?",28,155
+54,Zahra,"hey Zahra, your seat belt point really stuck with me. love that you’re building for the part people usually ignore until something breaks.  curious, how's the build going with i-GENTIC?",30,185
+55,,"congrats on winning Code for Impact, that’s huge! 700+ downloads in 4 days is a pretty fun problem to have.  curious, how’s the build going?",25,140
+56,,"even prev AEs aren't safe from a cold DM apparently.   curious, how's the build going with Being?",17,97
+57,,"congrats on getting picked for Venture Institute out of 3k+ applications!  curious, how's the build going with Sorso Labs?",19,122
+58,,"Saw your piece on high agency and the dome ceiling story, so well-crafted!  Curious, is the new venture still in early stages, or are you already working with your first clients?",31,178
+59,,"my barber has more regulatory oversight than most AI agents is so creative. feels like PhronEdge is tackling the part everyone ignores until something goes wrong.  curious, how’s the build going?",31,195
+60,,"saw you’re back building in stealth after taking Function from zero to a $2.5B company, congrats!  curious, how's the build coming along?",22,137
