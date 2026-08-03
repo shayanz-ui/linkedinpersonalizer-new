@@ -1,52 +1,87 @@
 # LinkedIn Outreach Copywriter
 
-A copywriter agent for an SDR at **Mercury** (a banking platform for startups)
-that writes **first-touch LinkedIn messages to tech founders**. You paste a
-LinkedIn profile; it returns **2 personalized message options** designed to
-spark curiosity and start a conversation — never to pitch.
+A standalone web app for an SDR at **Mercury** (a banking platform for startups)
+that turns a pasted LinkedIn profile into **2 first-touch message options** —
+designed to spark curiosity and start a conversation, never to pitch.
 
+- Paste a founder's profile → get two personalized options in a couple seconds.
 - No selling. Never mentions Mercury, banking, or anything sales-adjacent.
-- Fast by design: picks the single best signal and writes — no long deliberation.
-- Tone auto-calibrates to the prospect's career stage (casual/Gen Z for
-  younger founders, sharper and more polished for senior ones).
+- Tone auto-calibrates to career stage (casual/Gen Z for younger founders,
+  sharper and more polished for senior ones).
 - Every message ends with a variation of *"curious, how's the build going with
   [company]?"*
+- Trained on `reference/first_messages.csv` — ~60 real messages actually sent —
+  which is the ground truth for tone, structure, and judgment.
 
-## How it's built
-
-Two equivalent entry points, both driven by the same rules and the same
-training data:
-
-| File | What it is | How you use it |
-|------|-----------|----------------|
-| `.claude/skills/linkedin-copywriter/SKILL.md` | A Claude Code **skill** | In Claude Code, run `/linkedin-copywriter` (or just paste a profile and ask for outreach), then paste the LinkedIn profile. |
-| `.claude/agents/linkedin-copywriter.md` | A Claude Code **subagent** (fast model) | Ask Claude to "use the linkedin-copywriter agent on this profile: …". Runs on a fast model for quick, cheap generation. |
-| `reference/first_messages.csv` | **Training data** — ~60 real first messages actually sent | Ground truth for tone, structure, and judgment. Both entry points read from it. Add your best sent messages here to keep improving the voice. |
-
-## Usage
-
-Paste a LinkedIn profile — bio, recent posts, company info, any visible
-details. The agent analyzes:
-
-1. **Career stage / seniority** — to calibrate tone.
-2. **The single best signal** — a recent post's framing, a launch, funding or
-   an accelerator, a notable stat, a hiring spike, or a career transition.
-3. **Stealth status** — if building in stealth, it uses any available hint; if
-   there's genuinely nothing, it falls back to a casual stealth opener.
-
-It then outputs **only** two message options:
+## How it works
 
 ```
-Option 1:
-hey [name], [specific hook + one sharp observation]. curious, how's the build going with [company]?
-
-Option 2:
-[a different hook / angle / register] ... curious, how's the build going?
+Browser (public/)  →  Express server (server.js)  →  Claude API
+   paste profile        holds the API key,             claude-opus-5
+   get 2 options        builds the prompt +            (structured output,
+                        training data, calls Claude    low effort, prompt cache)
 ```
+
+The Anthropic API key lives **only on the server** — it is never sent to the
+browser. The server calls Claude with a cached system prompt (the copywriter
+rules + the training CSV) and returns exactly two options as structured JSON.
+
+## Running it locally
+
+Requires Node.js 18+.
+
+```bash
+npm install
+cp .env.example .env      # then paste your ANTHROPIC_API_KEY into .env
+npm start                 # serves http://localhost:3000
+```
+
+Open http://localhost:3000, paste a LinkedIn profile (bio, headline, recent
+posts, company info — anything visible), and click **Generate 2 options**
+(⌘/Ctrl+Enter also works).
+
+### Configuration (`.env`)
+
+| Variable | Default | Notes |
+|----------|---------|-------|
+| `ANTHROPIC_API_KEY` | — | **Required.** Get one at https://console.anthropic.com |
+| `MODEL` | `claude-opus-5` | Set to `claude-haiku-4-5` or `claude-sonnet-5` for faster / cheaper generation. |
+| `PORT` | `3000` | Server port. |
+
+## Deploying
+
+It's a standard Node web service — deploy to any host that runs Node (Render,
+Railway, Fly.io, a container, etc.):
+
+1. Push this repo to the host.
+2. Set `ANTHROPIC_API_KEY` (and optionally `MODEL`) as environment variables /
+   secrets — do **not** commit `.env`.
+3. Build/start command: `npm install` then `npm start`. The app listens on
+   `$PORT`.
+
+## Project layout
+
+| Path | What it is |
+|------|-----------|
+| `server.js` | Express server: serves the page and the `/api/generate` endpoint. |
+| `src/prompt.js` | Builds the system prompt (copywriter rules + training data) and the output schema. |
+| `public/` | The web page (`index.html`, `styles.css`, `app.js`). |
+| `reference/first_messages.csv` | The training data — real sent messages. Ground truth for voice. |
 
 ## Tuning the voice
 
 The single most effective way to improve output is to keep
-`reference/first_messages.csv` current: paste in the real messages that landed
-replies. The agent treats that file as ground truth for phrasing, rhythm, and
-what to mention vs. skip.
+`reference/first_messages.csv` current: add the real messages that landed
+replies. The app reads that file at startup and treats it as the source of
+truth for phrasing, rhythm, and what to mention vs. skip. (Restart the server
+after editing it.)
+
+## Also included: Claude Code skill + subagent
+
+If you (or teammates) use Claude Code, the same copywriter is also packaged as a
+**skill** (`.claude/skills/linkedin-copywriter/`) and a **subagent**
+(`.claude/agents/linkedin-copywriter.md`), both driven by the same rules and the
+same training CSV. Open this repo in Claude Code and run
+`/linkedin-copywriter`, or ask it to use the `linkedin-copywriter` agent, then
+paste a profile. These are optional — the web app above is the primary
+deliverable and needs no Claude Code.
