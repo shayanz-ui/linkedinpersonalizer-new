@@ -1,0 +1,30 @@
+{
+  "settings": {
+    "companyName": "Mercury",
+    "meetingMinutes": 30,
+    "slotStepMinutes": 30,
+    "daysAhead": 10,
+    "minNoticeHours": 4,
+    "bufferMinutes": 0,
+    "requireSdrFree": false
+  },
+  "aes": [
+    {
+      "name": "Alex Rivera",
+      "email": "alex.rivera@example.com",
+      "timezone": "America/New_York",
+      "workingHours": { "start": "09:00", "end": "17:00" }
+    },
+    {
+      "name": "Jordan Lee",
+      "email": "jordan.lee@example.com",
+      "timezone": "America/Los_Angeles",
+      "workingHours": { "start": "09:00", "end": "17:00" },
+      "meetingLink": "https://zoom.us/j/0000000000"
+    }
+  ],
+  "sdrs": [
+    { "name": "Sam Patel", "email": "sam.patel@example.com" },
+    { "name": "Casey Kim", "email": "casey.kim@example.com" }
+  ]
+}

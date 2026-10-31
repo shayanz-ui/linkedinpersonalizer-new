@@ -1,0 +1,19 @@
+{
+  "name": "demo-handoff",
+  "version": "1.0.0",
+  "description": "SDR -> AE demo handoff: one link that books the AE and loops in the SDR automatically.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^17.0.0",
+    "express": "^5.0.0",
+    "googleapis": "^189.0.0",
+    "luxon": "^3.7.0"
+  }
+}

@@ -1,0 +1,6 @@
+node_modules/
+.env
+data/
+team.json
+*.key.json
+service-account*.json
