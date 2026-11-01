@@ -13,7 +13,10 @@ const team = JSON.parse(fs.readFileSync(path.resolve(__dirname, TEAM_FILE), 'utf
 const settings = team.settings;
 const calendar = createCalendar();
 const store = new Store(path.resolve(__dirname, process.env.DATA_FILE || 'data/handoffs.json'));
-const BASE_URL = (process.env.BASE_URL || `http://localhost:${process.env.PORT || 3100}`).replace(/\/$/, '');
+// Booking links use BASE_URL if set, otherwise whatever address the SDR is using
+// (so it works on localhost, Codespaces, Render, etc. without config).
+const baseUrl = (req) =>
+  (process.env.BASE_URL || `${req.protocol}://${req.get('x-forwarded-host') || req.get('host')}`).replace(/\/$/, '');
 
 const aeBy = (email) => team.aes.find((a) => a.email === email);
 const sdrBy = (email) => team.sdrs.find((s) => s.email === email);
@@ -96,6 +99,7 @@ function httpError(status, message) {
 
 // ---------- app ----------
 const app = express();
+app.set('trust proxy', true);
 app.use(express.json());
 
 // Internal (SDR) pages are protected with a shared password when SDR_ACCESS_KEY is set.
@@ -151,7 +155,7 @@ app.post('/api/handoffs', requireSdr, async (req, res, next) => {
     const slots = await openSlots(handoff);
     res.json({
       token: handoff.token,
-      url: `${BASE_URL}/b/${handoff.token}`,
+      url: `${baseUrl(req)}/b/${handoff.token}`,
       reused,
       suggestions: pickSuggestions(slots, aeBy(aeEmail)),
       slots,
@@ -211,7 +215,7 @@ app.use((err, req, res, next) => {
 
 if (require.main === module) {
   const port = process.env.PORT || 3100;
-  app.listen(port, () => console.log(`Demo handoff running at ${BASE_URL} (calendar: ${calendar.name}, team: ${TEAM_FILE})`));
+  app.listen(port, () => console.log(`Demo handoff running on port ${port} (calendar: ${calendar.name}, team: ${TEAM_FILE})`));
 }
 
 module.exports = { app };
