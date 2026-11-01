@@ -6,24 +6,18 @@ const express = require('express');
 const { DateTime } = require('luxon');
 const { computeSlots, searchWindow } = require('./lib/slots');
 const { createCalendar } = require('./lib/calendar');
+const { Store } = require('./lib/store');
+const { EMAIL_RE, companyFromEmail } = require('./lib/email');
+const { checkOnce, startWatcher } = require('./lib/watcher');
 
 const TEAM_FILE = process.env.TEAM_FILE || (fs.existsSync(path.join(__dirname, 'team.json')) ? 'team.json' : 'team.example.json');
 const team = JSON.parse(fs.readFileSync(path.resolve(__dirname, TEAM_FILE), 'utf8'));
 const settings = team.settings;
 const calendar = createCalendar();
+const store = new Store(path.resolve(__dirname, process.env.DATA_FILE || 'data/watches.json'));
 
 const aeBy = (email) => team.aes.find((a) => a.email === email);
 const sdrBy = (email) => team.sdrs.find((s) => s.email === email);
-const EMAIL_RE = /^[^\s@<>,]+@[^\s@<>,]+\.[^\s@<>,]+$/;
-const FREE_MAIL = new Set(['gmail.com', 'googlemail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'icloud.com', 'me.com', 'aol.com', 'proton.me', 'protonmail.com']);
-
-function companyFromEmail(email) {
-  const domain = email.split('@')[1].toLowerCase();
-  if (FREE_MAIL.has(domain)) return null;
-  const root = domain.split('.').slice(-2)[0];
-  return root.charAt(0).toUpperCase() + root.slice(1);
-}
-
 async function openSlots(ae) {
   const { timeMin, timeMax } = searchWindow(settings);
   return computeSlots(ae, settings, await calendar.getBusy(ae.email, timeMin, timeMax));
@@ -51,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/team', (req, res) => {
   res.json({
-    aes: team.aes.map(({ name, email }) => ({ name, email })),
+    aes: team.aes.map(({ name, email, schedulerLink }) => ({ name, email, hasLink: Boolean(schedulerLink) })),
     sdrs: team.sdrs,
     mock: calendar.name === 'mock',
   });
@@ -110,6 +104,59 @@ app.post('/api/book', async (req, res, next) => {
   }
 });
 
+// Prospect wants a link: hand back the AE's own scheduling link (e.g. Zoom
+// Scheduler) and watch the AE's calendar so the SDR gets added when they book.
+app.post('/api/watch', (req, res, next) => {
+  try {
+    const ae = aeBy(String(req.body.aeEmail || ''));
+    const sdr = sdrBy(String(req.body.sdrEmail || ''));
+    const prospectEmail = String(req.body.prospectEmail || '').trim().toLowerCase();
+    if (!sdr) throw httpError(400, 'Pick who you are.');
+    if (!ae || !ae.schedulerLink) throw httpError(400, 'This AE has no scheduling link set up.');
+    if (!EMAIL_RE.test(prospectEmail)) throw httpError(400, "Add the prospect's email first, so you get added when they book.");
+    const existing = store.watches().find((w) => w.status === 'waiting' && w.sdrEmail === sdr.email && w.aeEmail === ae.email && w.prospectEmail === prospectEmail);
+    if (!existing) store.add({ sdrEmail: sdr.email, aeEmail: ae.email, prospectEmail, status: 'waiting', createdAt: new Date().toISOString() });
+    res.json({ link: ae.schedulerLink });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// The SDR's recent "links sent" and whether each prospect has booked.
+app.get('/api/watches', (req, res) => {
+  const sdrEmail = String(req.query.sdr || '');
+  const list = store
+    .watches()
+    .filter((w) => w.sdrEmail === sdrEmail)
+    .slice(-15)
+    .reverse()
+    .map((w) => ({ prospectEmail: w.prospectEmail, aeName: aeBy(w.aeEmail)?.name || w.aeEmail, status: w.status, start: w.start || null, createdAt: w.createdAt }));
+  res.json({ watches: list });
+});
+
+// Demo mode only: pretend the prospect booked through the AE's link.
+if (calendar.name === 'mock') {
+  app.post('/api/demo/simulate-booking', async (req, res, next) => {
+    try {
+      const w = store.watches().find((x) => x.status === 'waiting' && x.prospectEmail === String(req.body.prospectEmail || '') && x.sdrEmail === String(req.body.sdrEmail || ''));
+      if (!w) throw httpError(404, 'Nothing waiting for that prospect.');
+      const ae = aeBy(w.aeEmail);
+      const [startIso] = await openSlots(ae);
+      await calendar.createEvent({
+        organizerEmail: ae.email,
+        start: startIso,
+        end: DateTime.fromISO(startIso).plus({ minutes: settings.meetingMinutes }).toISO(),
+        summary: `Intro call (booked via scheduling link)`,
+        attendees: [{ email: ae.email, name: ae.name }, { email: w.prospectEmail }],
+      });
+      await checkOnce({ calendar, store, team });
+      res.json({ ok: true });
+    } catch (e) {
+      next(e);
+    }
+  });
+}
+
 app.use((err, req, res, next) => {
   if (!err.status) console.error(err);
   res.status(err.status || 500).json({ error: err.status ? err.message : 'Something went wrong. Please try again.' });
@@ -117,6 +164,7 @@ app.use((err, req, res, next) => {
 
 if (require.main === module) {
   const port = process.env.PORT || 3100;
+  startWatcher({ calendar, store, team }, Number(process.env.WATCH_INTERVAL_SECONDS) || 60);
   app.listen(port, () => console.log(`Demo booking running at http://localhost:${port} (calendar: ${calendar.name}, team: ${TEAM_FILE})`));
 }
 

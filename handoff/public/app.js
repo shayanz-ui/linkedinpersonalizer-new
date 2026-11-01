@@ -12,6 +12,7 @@ const mem = {
   get: (k) => { try { return localStorage.getItem('demo.' + k); } catch { return null; } },
   set: (k, v) => { try { localStorage.setItem('demo.' + k, v); } catch {} },
 };
+let team;
 let slots = [];
 let day = null;
 let chosen = null;
@@ -69,16 +70,61 @@ async function loadSlots() {
   }
 }
 
+function updateLinkRow() {
+  const ae = team.aes.find((a) => a.email === $('ae').value);
+  $('linkRow').classList.toggle('hidden', !ae || !ae.hasLink);
+  if (ae) $('copyLink').textContent = `Copy ${ae.name.split(' ')[0]}'s link`;
+  $('linkNote').textContent = '';
+}
+
+async function copyLink() {
+  $('error').textContent = '';
+  const prospect = $('email').value.trim();
+  try {
+    const { link } = await api('/api/watch', { sdrEmail: $('sdr').value, aeEmail: $('ae').value, prospectEmail: prospect });
+    try { await navigator.clipboard.writeText(link); } catch {}
+    $('linkNote').textContent = `Copied. When ${prospect} books, you'll be added to the invite.`;
+    loadSent();
+  } catch (e) {
+    $('error').textContent = e.message;
+    $('email').focus();
+  }
+}
+
+const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const STATUS = { waiting: 'Waiting to book', booked: 'Booked, you\'re on the invite', error: "Booked, but couldn't add you", expired: 'No booking after 14 days' };
+
+async function loadSent() {
+  const { watches } = await api(`/api/watches?sdr=${encodeURIComponent($('sdr').value)}`);
+  $('sentCard').classList.toggle('hidden', !watches.length);
+  $('sent').innerHTML = watches
+    .map((w) => {
+      const when = w.start ? ` · ${longLabel(w.start)}` : '';
+      const sim = team.mock && w.status === 'waiting' ? ` <button class="small secondary" type="button" data-sim="${esc(w.prospectEmail)}">Simulate booking</button>` : '';
+      return `<div class="sent-row"><span>${esc(w.prospectEmail)} <span class="muted">with ${esc(w.aeName)}</span></span><span class="status ${w.status}">${STATUS[w.status]}${when}${sim}</span></div>`;
+    })
+    .join('');
+}
+
 async function init() {
-  const team = await api('/api/team');
+  team = await api('/api/team');
   if (team.mock) $('mockBanner').classList.remove('hidden');
   fill($('sdr'), team.sdrs.map((s) => [s.email, s.name]), mem.get('sdr'));
   fill($('ae'), team.aes.map((a) => [a.email, a.name]), mem.get('ae'));
   const zones = ZONES.some(([z]) => z === local) ? ZONES : [[local, local.split('/').pop().replace(/_/g, ' ')], ...ZONES];
   fill($('tz'), zones, mem.get('tz') || local);
 
-  $('sdr').addEventListener('change', () => mem.set('sdr', $('sdr').value));
-  $('ae').addEventListener('change', () => { mem.set('ae', $('ae').value); loadSlots(); });
+  $('sdr').addEventListener('change', () => { mem.set('sdr', $('sdr').value); loadSent(); });
+  $('ae').addEventListener('change', () => { mem.set('ae', $('ae').value); updateLinkRow(); loadSlots(); });
+  $('copyLink').addEventListener('click', copyLink);
+  $('sent').addEventListener('click', async (e) => {
+    const email = e.target.dataset.sim;
+    if (!email) return;
+    e.target.disabled = true;
+    try { await api('/api/demo/simulate-booking', { prospectEmail: email, sdrEmail: $('sdr').value }); } catch (err) { $('error').textContent = err.message; }
+    await loadSent();
+    await loadSlots();
+  });
   $('tz').addEventListener('change', () => { mem.set('tz', $('tz').value); day = null; render(); });
   $('days').addEventListener('click', (e) => {
     const b = e.target.closest('[data-day]');
@@ -111,7 +157,10 @@ async function init() {
     }
   });
 
+  updateLinkRow();
   await loadSlots();
+  await loadSent();
+  setInterval(() => loadSent().catch(() => {}), 30000);
 }
 
 init().catch((e) => ($('error').textContent = e.message));

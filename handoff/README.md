@@ -1,37 +1,34 @@
 # Demo Booking
 
 Two ways an SDR hands a prospect to an AE for a 30-minute demo. The SDR is on
-the invite either way.
+the invite either way. Everything runs from one page: paste the prospect's email, pick the AE, then do one of the two below.
 
-## 1. Prospect replied with a time → book it in one click (this tool)
+## 1. Prospect replied with a time → book it in one click
 
-1. Paste the prospect's email and pick the AE.
-2. Click the time the prospect asked for. You see the AE's real open times, so no checking their calendar.
-3. Click **Book**.
+1. Click the time the prospect asked for. You see the AE's real open times, so no checking their calendar.
+2. Click **Book**.
 
 The event goes on the **AE's Google Calendar** with a Meet link (or the AE's
 Zoom link), and Google emails a normal calendar invite to the AE, the
 prospect and you. Your name, the AE and your timezone are remembered.
 
-## 2. Prospect wants a link → a Google Calendar booking page (no code)
+## 2. Prospect wants a link → send the AE's real Zoom link, get added automatically
 
-Google Calendar's **appointment schedules** support co-hosts. Every booking
-lands on each co-host's calendar too. The prospect gets a real
-`calendar.google.com` link, and the SDR is on every booking.
+Click **Copy Ethan's link** (or whichever AE you picked) and send it. It's the AE's own `scheduler.zoom.us` link, unchanged.
 
-Set it up once per SDR + AE pair:
+When the prospect books, Zoom Scheduler puts the meeting on the AE's Google
+Calendar. The tool checks AE calendars every minute. When it finds a
+booking from that prospect, or from someone else at their company, it
+**adds you to the invite**. Google emails you the invite, and
+**Links you've sent** shows "Booked" with the time.
 
-1. In Google Calendar, click **Create → Appointment schedule**.
-2. Name it something like "Mercury demo with Alex". Set the duration to 30 min and the hours to the AE's demo hours.
-3. Under **Co-hosts**, add the other person: the AE if you (the SDR) own the
-   schedule, or the SDR if the AE owns it.
-4. Under **Check calendars for availability**, make sure the **AE's**
-   calendar is checked, so it only offers times the AE is free.
-5. Optionally turn on **Guests can invite others** so the prospect can add a cofounder.
-6. Save, then **Share → copy the link**. Paste that link whenever a prospect asks for one.
+It ignores bookings made before you copied the link, and it stops watching
+after 14 days.
 
-Test it once by booking yourself with a personal email. Make sure the
-invite shows the AE, the SDR and the booker.
+> Test this once with a real AE: book through their Zoom link with a test email
+> and confirm the SDR gets added. If Zoom owns the calendar event (instead of
+> the AE), Google won't let the tool add guests. The tool would then show
+> "Booked, but couldn't add you", so you'd at least know it happened.
 
 ## Run it locally (demo mode, no setup)
 
@@ -47,7 +44,8 @@ calendar, so nothing is sent.
 ## Going live
 
 1. **Team.** Copy `team.example.json` to `team.json` and fill in the real AEs (email,
-   timezone, demo hours, optional `meetingLink`) and SDRs. `team.json` is
+   timezone, demo hours, `schedulerLink` = their Zoom Scheduler link, optional
+   `meetingLink` = their Zoom room for one-click bookings) and SDRs. `team.json` is
    never committed.
 2. **Google access (IT / Workspace admin).** Create a service account with the
    Calendar API enabled and **domain-wide delegation** for

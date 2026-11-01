@@ -10,7 +10,7 @@
 <main>
   <div class="whoami">You are <select id="sdr" aria-label="You are"></select></div>
   <h1>Book a demo</h1>
-  <p class="sub">Prospect picked a time? Book it here. The invite goes to the AE, the prospect and you.</p>
+  <p class="sub">You're on the invite either way: whether you book the time or the prospect books through the AE's link.</p>
   <div id="mockBanner" class="banner hidden">Demo mode: the calendar is simulated, so no real invites are sent.</div>
 
   <form id="form" class="card">
@@ -25,6 +25,13 @@
       </div>
     </div>
 
+    <div id="linkRow" class="linkrow">
+      <span><strong>Prospect wants a link?</strong></span>
+      <button id="copyLink" class="secondary" type="button">Copy link</button>
+      <span id="linkNote" class="muted"></span>
+    </div>
+
+    <h2 style="margin-top:20px">Prospect picked a time?</h2>
     <div class="tz">
       <label for="tz" style="margin:0;font-weight:600">AE's open times</label>
       <span>in</span>
@@ -40,6 +47,11 @@
   </form>
 
   <div id="done" class="success hidden"></div>
+
+  <section id="sentCard" class="card hidden">
+    <h2>Links you've sent</h2>
+    <div id="sent" class="sent"></div>
+  </section>
 </main>
 <script src="/app.js"></script>
 </body>

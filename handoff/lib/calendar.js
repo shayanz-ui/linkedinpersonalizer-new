@@ -61,6 +61,47 @@ function googleBackend(keyFile) {
         meetLink: location || res.data.hangoutLink || null,
       };
     },
+    // Events on the AE's calendar created/changed since `since` (upcoming only).
+    async listEvents(email, since) {
+      const cal = clientFor(email);
+      const out = [];
+      let pageToken;
+      do {
+        const res = await cal.events.list({
+          calendarId: 'primary',
+          updatedMin: since,
+          timeMin: new Date().toISOString(),
+          singleEvents: true,
+          showDeleted: false,
+          maxResults: 250,
+          pageToken,
+        });
+        for (const ev of res.data.items || []) {
+          out.push({
+            id: ev.id,
+            status: ev.status,
+            created: ev.created,
+            start: ev.start && (ev.start.dateTime || ev.start.date),
+            attendees: (ev.attendees || []).map((a) => ({ email: (a.email || '').toLowerCase() })),
+          });
+        }
+        pageToken = res.data.nextPageToken;
+      } while (pageToken);
+      return out;
+    },
+    // Add a guest to an existing event on the AE's calendar and email them the invite.
+    async addAttendee(email, eventId, attendee) {
+      const cal = clientFor(email);
+      const { data: ev } = await cal.events.get({ calendarId: 'primary', eventId });
+      const attendees = ev.attendees || [];
+      if (attendees.some((a) => (a.email || '').toLowerCase() === attendee.email.toLowerCase())) return;
+      await cal.events.patch({
+        calendarId: 'primary',
+        eventId,
+        sendUpdates: 'all',
+        requestBody: { attendees: [...attendees, { email: attendee.email, displayName: attendee.name }] },
+      });
+    },
   };
 }
 
@@ -99,9 +140,19 @@ function mockBackend() {
     },
     async createEvent(ev) {
       const id = 'mock_' + crypto.randomBytes(6).toString('hex');
-      events.push({ id, ...ev });
+      events.push({ id, status: 'confirmed', created: new Date().toISOString(), ...ev });
       console.log(`[mock calendar] Created "${ev.summary}" ${ev.start} for ${ev.attendees.map((a) => a.email).join(', ')}`);
       return { id, htmlLink: null, meetLink: ev.location || 'https://meet.google.com/mock-link' };
+    },
+    async listEvents(email, since) {
+      return events
+        .filter((ev) => ev.organizerEmail === email && ev.created >= since)
+        .map((ev) => ({ id: ev.id, status: ev.status, created: ev.created, start: ev.start, attendees: ev.attendees.map((a) => ({ email: a.email.toLowerCase() })) }));
+    },
+    async addAttendee(email, eventId, attendee) {
+      const ev = events.find((e) => e.id === eventId);
+      if (!ev.attendees.some((a) => a.email === attendee.email)) ev.attendees.push(attendee);
+      console.log(`[mock calendar] Added ${attendee.email} to "${ev.summary}"`);
     },
   };
 }

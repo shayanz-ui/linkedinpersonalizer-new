@@ -61,6 +61,8 @@ button {
   color: #fff;
   cursor: pointer;
 }
+button.secondary { background: var(--accent-soft); color: var(--accent); }
+button.small { padding: 4px 10px; font-size: 12px; }
 button:disabled { opacity: 0.55; cursor: default; }
 .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
 .muted { color: var(--muted); font-size: 13px; }
@@ -91,3 +93,12 @@ button:disabled { opacity: 0.55; cursor: default; }
 .time[aria-pressed="true"] { background: var(--accent); color: #fff; }
 .tz { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-size: 13px; color: var(--muted); }
 .tz select { width: auto; padding: 4px 8px; font-size: 13px; }
+
+.linkrow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px; background: var(--bg); border-radius: 8px; }
+.sent { display: grid; gap: 8px; }
+.sent-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 8px; font-size: 14px; }
+.sent-row:first-child { border-top: 0; padding-top: 0; }
+.status { font-size: 13px; font-weight: 600; }
+.status.waiting { color: var(--muted); }
+.status.booked { color: var(--ok); }
+.status.error, .status.expired { color: var(--err); }

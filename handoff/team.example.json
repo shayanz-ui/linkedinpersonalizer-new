@@ -12,18 +12,32 @@
       "name": "Alex Rivera",
       "email": "alex.rivera@example.com",
       "timezone": "America/New_York",
-      "workingHours": { "start": "09:00", "end": "17:00" }
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00"
+      },
+      "schedulerLink": "https://scheduler.zoom.us/your-ae-name/intro-call"
     },
     {
       "name": "Jordan Lee",
       "email": "jordan.lee@example.com",
       "timezone": "America/Los_Angeles",
-      "workingHours": { "start": "09:00", "end": "17:00" },
-      "meetingLink": "https://zoom.us/j/0000000000"
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00"
+      },
+      "meetingLink": "https://zoom.us/j/0000000000",
+      "schedulerLink": "https://scheduler.zoom.us/another-ae/intro-call"
     }
   ],
   "sdrs": [
-    { "name": "Sam Patel", "email": "sam.patel@example.com" },
-    { "name": "Casey Kim", "email": "casey.kim@example.com" }
+    {
+      "name": "Sam Patel",
+      "email": "sam.patel@example.com"
+    },
+    {
+      "name": "Casey Kim",
+      "email": "casey.kim@example.com"
+    }
   ]
 }
