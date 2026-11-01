@@ -5,8 +5,7 @@
     "slotStepMinutes": 30,
     "daysAhead": 10,
     "minNoticeHours": 4,
-    "bufferMinutes": 0,
-    "requireSdrFree": false
+    "bufferMinutes": 0
   },
   "aes": [
     {

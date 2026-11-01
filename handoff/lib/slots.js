@@ -53,27 +53,4 @@ function computeSlots(ae, settings, busy, now = DateTime.utc()) {
   return slots;
 }
 
-/**
- * Pick 3 times to offer in an email: on different days, at varied times
- * (late morning / early afternoon / mid-morning in the AE's timezone).
- */
-function pickSuggestions(slots, ae, count = 3) {
-  const targets = [11, 14, 10, 15];
-  const byDay = new Map();
-  for (const iso of slots) {
-    const local = DateTime.fromISO(iso, { zone: ae.timezone });
-    const key = local.toISODate();
-    if (!byDay.has(key)) byDay.set(key, []);
-    byDay.get(key).push({ iso, hour: local.hour + local.minute / 60 });
-  }
-  const picks = [];
-  for (const daySlots of byDay.values()) {
-    if (picks.length >= count) break;
-    const target = targets[picks.length % targets.length];
-    daySlots.sort((a, b) => Math.abs(a.hour - target) - Math.abs(b.hour - target));
-    picks.push(daySlots[0].iso);
-  }
-  return picks;
-}
-
-module.exports = { computeSlots, pickSuggestions, searchWindow };
+module.exports = { computeSlots, searchWindow };

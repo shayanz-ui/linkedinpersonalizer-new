@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert');
 const { DateTime } = require('luxon');
-const { computeSlots, pickSuggestions } = require('../lib/slots');
+const { computeSlots } = require('../lib/slots');
 
 const ae = { timezone: 'America/New_York', workingHours: { start: '09:00', end: '17:00' } };
 const settings = { meetingMinutes: 30, slotStepMinutes: 30, daysAhead: 2, minNoticeHours: 4, bufferMinutes: 0 };
@@ -25,12 +25,4 @@ test('removes busy times and handles DST (Nov 2 2026 is after fall back)', () =>
   assert.ok(!slots.includes('2026-11-02T14:00:00Z'));
   assert.ok(!slots.includes('2026-11-02T14:30:00Z'));
   assert.ok(slots.includes('2026-11-02T15:00:00Z'));
-});
-
-test('suggestions are on different days', () => {
-  const slots = computeSlots(ae, { ...settings, daysAhead: 5 }, [], now);
-  const picks = pickSuggestions(slots, ae);
-  assert.strictEqual(picks.length, 3);
-  const days = new Set(picks.map((p) => DateTime.fromISO(p).setZone(ae.timezone).toISODate()));
-  assert.strictEqual(days.size, 3);
 });

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book a Demo</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<main>
+  <div class="whoami">You are <select id="sdr" aria-label="You are"></select></div>
+  <h1>Book a demo</h1>
+  <p class="sub">Prospect picked a time? Book it here. The invite goes to the AE, the prospect and you.</p>
+  <div id="mockBanner" class="banner hidden">Demo mode: the calendar is simulated, so no real invites are sent.</div>
+
+  <form id="form" class="card">
+    <div class="row">
+      <div class="field">
+        <label for="email">Prospect email</label>
+        <input id="email" type="email" placeholder="jane@acme.com" autocomplete="off" required autofocus />
+      </div>
+      <div class="field">
+        <label for="ae">AE</label>
+        <select id="ae"></select>
+      </div>
+    </div>
+
+    <div class="tz">
+      <label for="tz" style="margin:0;font-weight:600">AE's open times</label>
+      <span>in</span>
+      <select id="tz"></select>
+    </div>
+    <div class="days" id="days" role="group" aria-label="Day"></div>
+    <div class="times" id="times" role="group" aria-label="Time"><p class="muted">Loading…</p></div>
+
+    <div class="actions" style="margin-top:20px">
+      <button id="book" type="submit" disabled>Pick a time</button>
+    </div>
+    <div id="error" class="error"></div>
+  </form>
+
+  <div id="done" class="success hidden"></div>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
